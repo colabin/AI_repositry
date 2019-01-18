@@ -1,0 +1,124 @@
+# 删除类别唯一的特征
+for df in [train, test]:
+    df.drop(['B3', 'B13', 'A13', 'A18', 'A23'], axis=1, inplace=True)
+    
+# 删除某一类别占比超过90%的列
+good_cols = list(train.columns)
+for col in train.columns:
+    rate = train[col].value_counts(normalize=True, dropna=False).values[0]
+    if rate > 0.9:
+        good_cols.remove(col)
+        print(col,rate)
+        
+# 删除异常值
+train = train[train['收率']>0.87]
+
+train = train[good_cols]
+good_cols.remove('收率')
+test  = test[good_cols]
+
+# 合并数据集
+target = train['收率']
+del train['收率']
+data = pd.concat([train,test],axis=0,ignore_index=True)
+data = data.fillna(-1)
+
+# 时间特征转换
+def timeTranSecond(t):
+    try:
+        t,m,s=t.split(":")
+    except:
+        if t=='1900/1/9 7:00':
+            return 7*3600/3600
+        elif t==-1:
+            return -1
+        else:
+            return 0
+    try:
+        tm = (int(t)*3600+int(m)*60+int(s))/3600
+    except:
+        return (30*60)/3600
+    return tm
+ 
+for f in ['A5','A7','A9','A11','A14','A16','A24','A26','B5','B7']:
+    try:
+        data[f] = data[f].apply(timeTranSecond)
+    except:
+        print(f,'应该在前面被删除了！')
+        
+ def getDuration(se):
+    try:
+        sh,sm,eh,em=re.findall(r"\d+\.?\d*",se)
+    except:
+        if se == -1:
+            return -1 
+    try:
+        if int(sh)>int(eh):
+            tm = (int(eh)*3600+int(em)*60-int(sm)*60-int(sh)*3600)/3600 + 24
+        else:
+            tm = (int(eh)*3600+int(em)*60-int(sm)*60-int(sh)*3600)/3600
+    except:
+        if se=='19:-20:05':
+            return 1
+        elif se=='15:00-1600':
+            return 1
+    
+    return tm
+    
+for f in ['A20','A28','B4','B9','B10','B11']:
+    data[f] = data.apply(lambda df: getDuration(df[f]), axis=1)
+    
+
+data['样本id'] = data['样本id'].apply(lambda x: int(x.split('_')[1]))
+
+#此处将样本id视为数值特征，其余视为类别特征
+categorical_columns = [f for f in data.columns if f not in ['样本id']]
+numerical_columns = [f for f in data.columns if f not in categorical_columns]
+
+#对类别特征encoding
+for f in categorical_columns:
+    data[f] = data[f].map(dict(zip(data[f].unique(), range(0, data[f].nunique()))))
+train = data[:train.shape[0]]
+test  = data[train.shape[0]:]
+print(train.shape)
+print(test.shape)
+
+#添加新特征，将收率进行分箱，然后构造每个特征中的类别对应不同收率的均值
+#train['target'] = list(target) 
+train['target'] = target
+train['intTarget'] = pd.cut(train['target'], 5, labels=False)
+train = pd.get_dummies(train, columns=['intTarget'])
+li = ['intTarget_0.0','intTarget_1.0','intTarget_2.0','intTarget_3.0','intTarget_4.0']
+mean_columns = []
+for f1 in categorical_columns:
+    cate_rate = train[f1].value_counts(normalize=True, dropna=False).values[0]
+    if cate_rate < 0.90:
+        for f2 in li:
+            col_name = 'B14_to_'+f1+"_"+f2+'_mean'
+            mean_columns.append(col_name)
+            order_label = train.groupby([f1])[f2].mean()
+            train[col_name] = train['B14'].map(order_label)  #此处B14应该为f1才合理
+            miss_rate = train[col_name].isnull().sum() * 100 / train[col_name].shape[0]
+            if miss_rate > 0:
+                train = train.drop([col_name], axis=1)
+                mean_columns.remove(col_name)
+            else:
+                test[col_name] = test['B14'].map(order_label)          
+train.drop(li+['target'], axis=1, inplace=True)
+print(train.shape)
+print(test.shape)
+
+#对类别特征进行one-hot编码
+X_train = train[mean_columns+numerical_columns].values
+X_test = test[mean_columns+numerical_columns].values
+# one hot
+enc = OneHotEncoder()
+for f in categorical_columns:
+    enc.fit(data[f].values.reshape(-1, 1))
+    X_train = sparse.hstack((X_train, enc.transform(train[f].values.reshape(-1, 1))), 'csr')
+    X_test = sparse.hstack((X_test, enc.transform(test[f].values.reshape(-1, 1))), 'csr')
+print(X_train.shape)
+print(X_test.shape)
+
+y_train = target.values
+        
