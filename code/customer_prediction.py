@@ -87,3 +87,4 @@ def getPrediction():
     result=pd.DataFrame({'ID':np.array(x_id).reshape(300,),'TARGET':y_pre_array})
     result.to_csv("src/step1/ground_truth/test_prediction.csv",index=False,sep=',',encoding="utf-8")
     # ********* End *********#
+    
