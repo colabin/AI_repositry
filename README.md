@@ -17,12 +17,12 @@ https://blog.csdn.net/han_xiaoyang/article/details/52665396<br/>
 
 
 
-一些比较有意思的论文<br/>:
-[1]Wang S , Minku L L , Yao X . A learning framework for online class imbalance learning[C]// Computational Intelligence and Ensemble Learning (CIEL), 2013 IEEE Symposium on. IEEE, 2013.
-[2]Partalas I , Tsoumakas G , Katakis I , et al. Ensemble pruning using reinforcement learning.[C]// Conference on Advances in Artificial Intelligence. DBLP, 2006
-[3]Douzas G, Bacao F. Effective data generation for imbalanced learning using conditional generative adversarial networks[J]. Expert Systems with applications, 2018, 91: 464-471.
+一些比较有意思的论文:<br/>
+[1]Wang S , Minku L L , Yao X . A learning framework for online class imbalance learning[C]// Computational Intelligence and Ensemble Learning (CIEL), 2013 IEEE Symposium on. IEEE, 2013.<br/>
+[2]Partalas I , Tsoumakas G , Katakis I , et al. Ensemble pruning using reinforcement learning.[C]// Conference on Advances in Artificial Intelligence. DBLP, 2006<br/>
+[3]Douzas G, Bacao F. Effective data generation for imbalanced learning using conditional generative adversarial networks[J]. Expert Systems with applications, 2018, 91: 464-471.<br/>
 [4] Yang P, Yoo P D, Fernando J, et al. “Sample Subset Optimization Techniques for Imbalanced and Ensemble Learning Problems in
-Bioinformatics Applications,” IEEE Transactions on Cybernetics, vol.44, no. 3, pp. 445-455. 2014.
-[5]Mnih V , Kavukcuoglu K , Silver D , et al. Playing Atari with Deep Reinforcement Learning[J]. Computer Science, 2013.
+Bioinformatics Applications,” IEEE Transactions on Cybernetics, vol.44, no. 3, pp. 445-455. 2014.<br/>
+[5]Mnih V , Kavukcuoglu K , Silver D , et al. Playing Atari with Deep Reinforcement Learning[J]. Computer Science, 2013.<br/>
 
 
