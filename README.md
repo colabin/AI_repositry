@@ -13,3 +13,9 @@ https://blog.csdn.net/han_xiaoyang/article/details/52665396<br/>
 更新记录：<br/>
 2018.10 更新全国高校绿色计算大赛数据挖掘赛题，客户预测代码，Randomforest集成<br/>
 2019.1 更新天池大数据竞赛津南数字制造算法挑战赛baseline代码，包括EDA，feature process，xgboost，lgb，cv，stacking<br/>
+
+
+
+
+不平衡学习论文记录<br/>:
+CGAN：
