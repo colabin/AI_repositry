@@ -123,4 +123,5 @@ ctrl+p, ctrl+q <br/>
 1.添加L_Resnet_E_IR多GPU训练脚本,可以进行单GPU或者CPU finetune<br/>
 2.添加MoblienFacenet多GPU训练脚本,可以进行单GPU或者CPU finetune<br/>
 
-
+关于防翻拍和活体检测的实验记录：<br/>
+目前开源的防翻拍方案在开源数据比如Replay Attack，NUAA上基本可以达到论文中的性能，但是在私有数据上泛化性能较差，后期加入部分人为构造数据后性能得到一定提升，活体检测实验中发现基于纹理的活体实测效果拒真率偏高，后期计划与光线活体结合使用。<br/>
